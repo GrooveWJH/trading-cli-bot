@@ -7,6 +7,7 @@ It can:
 - read balances, positions, and open orders for `binance / okx / gate / mexc`
 - create dry-run trade plans without placing orders
 - run live single-leg, pair, and transfer operations only after explicit confirmation
+- plan, place, list, and cancel OKX reduce-only TP/SL trigger orders
 - start a localhost-only daemon required by live mutation commands
 
 ## Safety Model
@@ -36,6 +37,7 @@ This extraction already copied the original local `.env` into `trading-cli-bot/.
 ../tbot balance okx perp
 ../tbot positions okx
 ../tbot orders okx perp BTC/USDT
+../tbot risk orders okx --json
 ```
 
 ## Dry-Run Planning
@@ -87,6 +89,48 @@ Then plan, copy the exact confirmation phrase, and run:
 ```
 
 If the daemon is not healthy, the live route fails before placing an order.
+
+## OKX TP/SL Trigger Orders
+
+Risk commands manage OKX server-side conditional algo orders. Planning is dry-run:
+
+```bash
+../tbot risk plan okx BTC-USDT-SWAP long 2.56 \
+  --take-profit 76000 \
+  --stop-loss 72900 \
+  --json
+```
+
+For a long position, the generated orders are reduce-only `sell` triggers. For a short
+position, they are reduce-only `buy` triggers. The default `--order-px -1` asks OKX to
+send a market order after the trigger fires.
+
+Live placement requires the exact phrase emitted by the plan:
+
+```bash
+../tbot risk bracket okx BTC-USDT-SWAP long 2.56 \
+  --take-profit 76000 \
+  --stop-loss 72900 \
+  --live \
+  --confirm "LIVE_BRACKET:okx:BTC-USDT-SWAP:long:2.56:TP_76000:SL_72900"
+```
+
+List pending OKX conditional algo orders:
+
+```bash
+../tbot risk orders okx --json
+../tbot risk orders okx BTC-USDT-SWAP --json
+```
+
+Cancel pending algo orders with an explicit confirmation phrase:
+
+```bash
+../tbot risk cancel okx BTC-USDT-SWAP 3609646938838437888 \
+  --confirm "LIVE_CANCEL_ALGOS:okx:BTC-USDT-SWAP:3609646938838437888"
+```
+
+OKX net-position conditional orders are created as separate TP and SL algos rather
+than one combined request, so both sides remain visible and cancellable.
 
 ## Config
 

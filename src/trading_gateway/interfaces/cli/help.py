@@ -9,6 +9,7 @@ APP = (
     "  tbot daemon start\n"
     "  tbot daemon status\n"
     "  tbot positions okx\n"
+    "  tbot risk plan okx BTC-USDT-SWAP long 2.56 --take-profit 76000 --stop-loss 72900\n"
     "  tbot transfer okx USDT 10 spot perp\n"
     "  tbot pair-plan binance okx SOL/USDT 20\n"
     "  tbot pair-run okx gate SOL/USDT 20 --confirm \"LIVE_PAIR_OPEN:okx:gate:SOLUSDT:QUOTE_20\"\n"
@@ -22,6 +23,7 @@ APP = (
 )
 WALLET = "Wallet commands moved to top-level commands."
 TRADE = "Plan or execute capped trade smoke tests."
+RISK = "Plan, place, list, and cancel OKX reduce-only TP/SL trigger orders."
 CAPABILITIES = "Show static CCXT and adapter capability flags; no private API call is made."
 SUMMARY = "Fast USDT wallet overview for binance/okx/gate/mexc."
 SNAPSHOT = "Full account snapshot: all spot assets plus all active perp positions without symbol-by-symbol scans."

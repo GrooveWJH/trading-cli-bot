@@ -12,6 +12,7 @@ from trading_gateway.interfaces.cli.commands.bootstrap import command_tail, echo
 from trading_gateway.interfaces.cli.commands.trade_smoke import register_trade_commands
 from trading_gateway.interfaces.cli.daemon import register_daemon_commands
 from trading_gateway.interfaces.cli.lab import register_lab_commands
+from trading_gateway.interfaces.cli.risk import register_risk_commands
 from trading_gateway.interfaces.cli.wallet import wallet_balance, wallet_orders, wallet_positions, wallet_snapshot, wallet_summary, wallet_transfer
 from trading_gateway.interfaces.cli.web import register_web_command
 from trading_gateway.support.capabilities import build_capability_matrix
@@ -29,6 +30,9 @@ app = typer.Typer(
 trade_app = typer.Typer(add_completion=False, help=cli_help.TRADE)
 app.add_typer(trade_app, name="trade", help=cli_help.TRADE)
 register_trade_commands(trade_app)
+risk_app = typer.Typer(add_completion=False, help=cli_help.RISK)
+app.add_typer(risk_app, name="risk", help=cli_help.RISK)
+register_risk_commands(risk_app)
 register_lab_commands(app)
 register_web_command(app)
 register_daemon_commands(app)
