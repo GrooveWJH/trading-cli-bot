@@ -1,0 +1,23 @@
+[project]
+name = "trading-cli-bot"
+version = "0.1.0"
+description = "Standalone local CLI bot extracted from ArbitrageStation Trading Gateway."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "ccxt>=4.5.44",
+    "fastapi>=0.135.1",
+    "httpx>=0.28.1",
+    "python-dotenv>=1.2.2",
+    "typer>=0.24.1",
+    "uvicorn[standard]>=0.42.0",
+]
+
+[project.scripts]
+tbot = "trading_gateway.interfaces.cli.app:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]

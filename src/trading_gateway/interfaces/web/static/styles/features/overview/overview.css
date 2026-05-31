@@ -1,0 +1,97 @@
+.tg-metric {
+  display: grid;
+  gap: 0.45rem;
+  padding: 0.875rem;
+  border: 1px solid var(--cds-border-subtle);
+  background: var(--cds-layer-accent);
+}
+
+.tg-metric-label {
+  color: var(--cds-text-secondary);
+  font-size: 0.75rem;
+}
+
+.tg-metric-value {
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.tg-card-title-row,
+.tg-account-detail__header,
+.tg-inspector-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  width: 100%;
+  min-width: 0;
+  flex-wrap: wrap;
+}
+
+.tg-account-detail,
+.tg-inspector,
+.tg-inspector-section {
+  display: grid;
+  gap: 0.875rem;
+}
+
+.tg-job-list-item {
+  width: 100%;
+  border: 1px solid var(--cds-border-subtle);
+  background: var(--cds-layer-accent);
+  color: inherit;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.85rem;
+  text-align: left;
+  cursor: pointer;
+}
+
+.tg-job-sub,
+.tg-timeline-item__body,
+.tg-timeline-item__meta {
+  color: var(--cds-text-secondary);
+  font-size: 0.8rem;
+  overflow-wrap: anywhere;
+}
+
+.tg-kv {
+  display: grid;
+  gap: 0.25rem;
+  padding: 0.75rem;
+  border: 1px solid var(--cds-border-subtle);
+  background: var(--cds-layer-accent);
+}
+
+.tg-kv strong {
+  font-size: 0.92rem;
+}
+
+.tg-inspector-drawer .ant-drawer-content,
+.tg-inspector-drawer .cds--drawer-content,
+.tg-inspector-drawer .cds--drawer-container {
+  box-shadow: -12px 0 32px rgb(0 0 0 / 0.12);
+}
+
+.tg-inspector-drawer .ant-drawer-header,
+.tg-inspector-drawer .cds--drawer-header {
+  padding: 1rem 1rem 0.75rem;
+}
+
+.tg-inspector-drawer .ant-drawer-body,
+.tg-inspector-drawer .cds--drawer-body {
+  padding: 0 1rem 1rem;
+}
+
+.tg-inspector-section pre {
+  margin: 0;
+  padding: 0.75rem;
+  overflow: auto;
+  background: var(--cds-layer-accent);
+  border: 1px solid var(--cds-border-subtle);
+  font-size: 0.78rem;
+  white-space: pre-wrap;
+  word-break: break-word;
+}

@@ -1,0 +1,1 @@
+"""MEXC spot adapter surface."""

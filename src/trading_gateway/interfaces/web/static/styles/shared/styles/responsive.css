@@ -1,0 +1,44 @@
+@media (max-width: 1480px) {
+  .tg-status-strip {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .tg-page-grid {
+    grid-template-columns: minmax(0, 1fr) 20rem;
+  }
+}
+
+@media (max-width: 1280px) {
+  .tg-header {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+
+  .tg-header__actions {
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .tg-shell {
+    grid-template-columns: 14rem minmax(0, 1fr);
+  }
+
+  .tg-status-strip,
+  .tg-page-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .tg-metric-row,
+  .tg-form-grid,
+  .tg-form-grid--two,
+  .tg-kv-grid,
+  .tg-task-modal__summary-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tg-success-celebration {
+    display: none;
+  }
+}

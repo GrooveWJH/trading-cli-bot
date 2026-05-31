@@ -1,0 +1,1 @@
+"""MEXC perp adapter surface."""

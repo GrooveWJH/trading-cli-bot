@@ -1,0 +1,1 @@
+"""Binance shared adapter surface."""

@@ -1,0 +1,13 @@
+.DS_Store
+.env
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+src/*.egg-info/
+var/cache/
+var/run/
+var/pair_journal/
+reports/

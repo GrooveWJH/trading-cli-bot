@@ -1,0 +1,1 @@
+"""OKX shared adapter surface."""

@@ -1,0 +1,147 @@
+.tg-header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1.25rem;
+  align-items: center;
+  padding: 0.75rem 1.25rem 0.625rem;
+  border-bottom: 1px solid var(--cds-border-subtle);
+  background: var(--cds-layer);
+}
+
+.tg-header__meta,
+.tg-header__actions,
+.tg-header__address,
+.tg-page-band,
+.tg-main-column,
+.tg-side-column {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.tg-header__meta {
+  align-content: center;
+}
+
+.tg-header__title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.tg-header__title {
+  margin: 0;
+  font-size: 1.5rem;
+  line-height: 1.1;
+}
+
+.tg-header__actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.tg-header__address-pill,
+.tg-header__button-row,
+.tg-account-detail__meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.tg-header__address-pill {
+  min-width: 0;
+  padding: 0.3rem 0.6rem;
+  border: 1px solid var(--cds-border-subtle);
+  border-radius: 999px;
+  background: var(--cds-layer-accent);
+}
+
+.tg-status-strip {
+  display: grid;
+  grid-template-columns: 16rem minmax(0, 1.6fr) 14rem minmax(14rem, 18rem);
+  gap: 0.75rem;
+  padding: 0.875rem 1.25rem;
+  border-bottom: 1px solid var(--cds-border-subtle);
+  background: var(--cds-layer-accent);
+}
+
+.tg-status-cluster,
+.tg-page-grid,
+.tg-metric-row,
+.tg-form-grid,
+.tg-kv-grid,
+.tg-job-list,
+.tg-table-shell,
+.tg-timeline-list {
+  display: grid;
+}
+
+.tg-status-cluster,
+.tg-job-list,
+.tg-timeline-list {
+  gap: 0.6rem;
+  min-width: 0;
+}
+
+.tg-status-route-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  align-content: flex-start;
+}
+
+.tg-shell {
+  display: grid;
+  grid-template-columns: 16rem minmax(0, 1fr);
+  align-items: stretch;
+  min-height: calc(100vh - 11.5rem);
+}
+
+.tg-content {
+  padding: 1.25rem;
+  min-width: 0;
+  overflow-x: hidden;
+}
+
+.tg-page-grid {
+  grid-template-columns: minmax(0, 1.35fr) 22rem;
+  gap: 1rem;
+  align-items: start;
+}
+
+.tg-page-band {
+  grid-column: 1 / -1;
+  gap: 1rem;
+}
+
+.tg-main-column--wide {
+  grid-column: 1 / -1;
+}
+
+.tg-metric-row {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.tg-form-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.875rem;
+  margin-bottom: 1rem;
+}
+
+.tg-form-grid--two {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.tg-kv-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.tg-table-shell {
+  min-width: 0;
+  overflow-x: auto;
+}

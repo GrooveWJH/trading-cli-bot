@@ -1,0 +1,103 @@
+.tg-app {
+  min-height: 100vh;
+  background: var(--cds-background);
+  color: var(--cds-text-primary);
+  overflow-x: hidden;
+}
+
+.tg-eyebrow {
+  color: var(--cds-text-secondary);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+}
+
+.tg-muted-label,
+.tg-field span,
+.tg-field-help,
+.tg-header__address-label,
+.tg-sidebar__brand span,
+.tg-sidebar-foot-label,
+.tg-status-label,
+.tg-account-detail__hint,
+.tg-confirm-block span,
+.tg-kv span,
+.tg-intent-summary span {
+  color: var(--cds-text-secondary);
+  font-size: 0.75rem;
+}
+
+.tg-refresh-stamp {
+  flex: 0 0 auto;
+  padding: 0.125rem 0.45rem;
+  border: 1px solid var(--cds-border-subtle);
+  border-radius: 4px;
+  background: var(--cds-layer-accent);
+  color: var(--cds-text-secondary);
+  font-size: 0.75rem;
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+.tg-refresh-stamp.is-flashing {
+  animation: tg-refresh-flash 360ms ease-in-out 3;
+}
+
+.tg-row-selectable {
+  cursor: pointer;
+}
+
+.tg-row-selectable.is-selected td {
+  background: var(--cds-layer-selected, #e8f1ff);
+}
+
+.tg-toast {
+  border-radius: 8px;
+}
+
+.tg-toast .ant-message-notice-content,
+.tg-toast .cds--toast-notification,
+.tg-toast .cds--inline-notification,
+.cds--tag {
+  max-width: 100%;
+}
+
+.tg-toast .ant-message-notice-content,
+.tg-toast .cds--toast-notification,
+.tg-toast .cds--inline-notification {
+  border-radius: 8px;
+}
+
+.cds--tag__label,
+.tg-kv strong,
+.tg-confirm-block code,
+.tg-task-modal__summary-item strong,
+.tg-task-modal__verification,
+.tg-task-modal__step-text,
+.tg-task-modal__lock-note {
+  overflow-wrap: anywhere;
+}
+
+.cds--table-container,
+.cds--data-table-container {
+  min-width: 0;
+}
+
+.cds--data-table-content,
+.cds--table-content {
+  overflow-x: auto;
+}
+
+@keyframes tg-refresh-flash {
+  0%,
+  100% {
+    background: var(--cds-layer-accent);
+    border-color: var(--cds-border-subtle);
+    color: var(--cds-text-secondary);
+  }
+
+  50% {
+    background: #defbe6;
+    border-color: #24a148;
+    color: #0e6027;
+  }
+}

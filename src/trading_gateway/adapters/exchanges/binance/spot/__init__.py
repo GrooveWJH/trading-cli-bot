@@ -1,0 +1,1 @@
+"""Binance spot adapter surface."""

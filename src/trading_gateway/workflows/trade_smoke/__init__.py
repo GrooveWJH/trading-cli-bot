@@ -1,0 +1,1 @@
+"""Trade smoke workflows."""

@@ -1,0 +1,62 @@
+.tg-field {
+  display: grid;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.tg-field--full,
+.tg-confirm-block {
+  margin-top: 1rem;
+}
+
+.tg-mode-note,
+.tg-intent-summary {
+  display: grid;
+  gap: 0.35rem;
+  padding: 0.75rem;
+  border: 1px solid var(--cds-border-subtle);
+  background: var(--cds-layer-accent);
+}
+
+.tg-mode-note {
+  color: var(--cds-text-secondary);
+}
+
+.tg-intent-summary strong {
+  font-size: 0.92rem;
+  overflow-wrap: anywhere;
+}
+
+.tg-field-help {
+  font-size: 0.82rem;
+  color: var(--cds-text-secondary);
+}
+
+.tg-timeline-item {
+  display: grid;
+  gap: 0.55rem;
+  padding: 0.85rem;
+  border-left: 3px solid var(--cds-border-interactive);
+  background: var(--cds-layer-accent);
+}
+
+.tg-timeline-item__head,
+.tg-timeline-item__meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.tg-confirm-block {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.tg-confirm-block code {
+  display: block;
+  padding: 0.75rem;
+  border: 1px solid var(--cds-border-subtle);
+  background: var(--cds-layer-accent);
+}

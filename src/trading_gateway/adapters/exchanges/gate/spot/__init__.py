@@ -1,0 +1,1 @@
+"""Gate spot adapter surface."""

@@ -1,0 +1,236 @@
+# Trading CLI Bot 配置。路径按 trading-cli-bot 项目根目录解析。
+
+[env]
+# 存放真实交易所密钥的 dotenv。
+dotenv_path = ".env"
+
+[paths]
+# 交易对支持表和本地钱包缓存。
+route_universe = "var/data/symbol_route_universe.json"
+wallet_summary_cache = "var/cache/wallet_summary.json"
+
+[network]
+# 请求超时，单位毫秒。
+ccxt_timeout_ms = 20000
+account_snapshot_timeout_ms = 5000
+wallet_summary_timeout_ms = 3000
+enable_rate_limit = true
+
+[daemon]
+# 本地交易 daemon。用于 live 交易路径的常驻热连接和健康门禁。
+host = "127.0.0.1"
+port = 8766
+private_refresh_interval_sec = 3.0
+readiness_ttl_sec = 10.0
+startup_warmup_timeout_sec = 15.0
+runtime_dir = "var/run"
+
+[web.polling]
+# Web 控制台轮询配置，单位毫秒。
+daemon_status_ms = 3000
+summary_ms = 10000
+snapshot_ms = 10000
+jobs_ms = 2000
+journals_ms = 10000
+live_job_ms = 1200
+query_stale_ms = 2000
+
+[quality.dir_fanout]
+# 单个目录允许的源码文件上限。
+default_code_files = 8
+generated_code_files = 10
+
+[quality.maxline]
+# 按 glob 分层定义 maxline，避免脚本里写死。
+rules = [
+  { glob = "src/trading_gateway/domain/**/*.py", max_lines = 220 },
+  { glob = "src/trading_gateway/support/**/*.py", max_lines = 220 },
+  { glob = "src/trading_gateway/app/**/*.py", max_lines = 260 },
+  { glob = "src/trading_gateway/workflows/**/*.py", max_lines = 260 },
+  { glob = "src/trading_gateway/adapters/**/*.py", max_lines = 260 },
+  { glob = "src/trading_gateway/interfaces/**/*.py", max_lines = 260 },
+  { glob = "tests/**/*.py", max_lines = 260 },
+  { glob = "frontend/src/app/routes/**/*.jsx", max_lines = 320 },
+  { glob = "frontend/src/features/**/page/**/*.jsx", max_lines = 320 },
+  { glob = "frontend/src/**/*.jsx", max_lines = 220 },
+  { glob = "frontend/src/**/*.js", max_lines = 220 },
+  { glob = "frontend/src/shared/i18n/**/*.js", max_lines = 180 },
+  { glob = "frontend/src/**/*.css", max_lines = 220 },
+  { glob = "src/trading_gateway/interfaces/web/static/generated/**/*.js", max_lines = 320 },
+  { glob = "src/trading_gateway/interfaces/web/static/generated/**/*.css", max_lines = 320 },
+]
+exclude_globs = [
+  "tests/fixtures/**",
+  "src/trading_gateway/interfaces/web/static/index.html",
+]
+
+[trading.safety]
+# 本地实盘安全阀。
+max_quote_usdt = 100.0
+require_live_confirm = true
+
+[trading.planning]
+# planning 阶段优先复用 daemon 私有账户态，市场价格仍实时读取。
+account_state_source = "daemon_cache_prefer"
+account_state_max_age_sec = 5.0
+allow_direct_exchange_fallback = true
+market_data_source = "live"
+refresh_routes_after_live_completion = true
+
+[trading.fees.binance]
+# 预估费率，单位 bps；实际成交费优先使用交易所返回值。
+spot_maker_bps = 10.0
+spot_taker_bps = 10.0
+perp_maker_bps = 2.0
+perp_taker_bps = 5.0
+
+[trading.fees.okx]
+spot_maker_bps = 8.0
+spot_taker_bps = 10.0
+perp_maker_bps = 2.0
+perp_taker_bps = 5.0
+
+[trading.fees.gate]
+spot_maker_bps = 10.0
+spot_taker_bps = 10.0
+perp_maker_bps = 2.0
+perp_taker_bps = 5.0
+
+[trading.fees.mexc]
+spot_maker_bps = 0.0
+spot_taker_bps = 5.0
+perp_maker_bps = 4.0
+perp_taker_bps = 6.0
+
+[trading.perp_execution]
+# 单腿合约执行参数。
+order_timeout_sec = 5
+max_requotes = 10
+close_all_maker_attempts = 10
+poll_interval_sec = 0.25
+min_poll_interval_sec = 0.01
+target_tolerance_steps = 1
+target_tolerance_quote_usdt = 0.05
+target_leverage = 1
+
+[trading.binance_perp_bbo]
+# Binance 合约 maker/BBO 默认参数。
+order_type = "limit"
+time_in_force = "GTC"
+price_match = "QUEUE"
+
+[trading.spot_execution]
+# 单腿现货执行参数。
+order_timeout_sec = 5
+max_requotes = 10
+poll_interval_sec = 0.25
+min_poll_interval_sec = 0.01
+target_tolerance_steps = 1
+target_tolerance_quote_usdt = 0.05
+# sell_all_rescue_mode = "disabled" | "bbo_counterparty_1"
+sell_all_rescue_mode = "bbo_counterparty_1"
+sell_all_rescue_max_quote_usdt = 100.0
+sell_all_rescue_max_slippage_bps = 50.0
+
+[trading.binance_spot_bbo]
+# Binance 现货 maker/BBO 默认参数。
+order_type = "limit_maker"
+price_source = "order_book"
+post_only = true
+price_refresh = "requote"
+
+[trading.pair_execution]
+# 配对双腿执行与恢复参数。
+# 重要：maker 主循环的总尝试次数 = `*_max_requotes + 1`。
+# 也就是说：
+# - `normal_max_requotes = 50` 表示正常双腿阶段最多 51 轮 submit/monitor/cancel/verify
+# - `unhedged_recovery_max_requotes = 10` 表示单腿恢复阶段最多 11 轮 submit/monitor/cancel/verify
+# - 若开启 `allow_taker_rescue = true`，maker 阶段仍未收敛时，还会追加 1 次 taker 市价救援
+# 所以当前配置下的理论最坏路径是：
+# 1. 正常双腿阶段最多 51 轮
+# 2. 若一条腿先成交、另一条腿滞后，再进入单腿恢复最多 11 轮
+# 3. 仍未完成时，最后再做 1 次 taker rescue
+# 对“重复撤单开单”的体感来说，`normal_max_requotes` 是最关键的主旋钮。
+normal_max_requotes = 50
+
+# 单腿失衡恢复阶段的最大 requote 次数。
+# 只在一条腿已经达标、另一条腿仍未达标时生效。
+# 实际总恢复轮数 = 10 + 1 = 11 轮。
+unhedged_recovery_max_requotes = 10
+
+# 是否允许在 maker/requote 全部耗尽后，用 taker 市价单强制收尾。
+allow_taker_rescue = true
+
+# 单次 taker rescue 允许处理的最大名义金额。
+# 超过该值则直接拒绝救援，避免为了收尾付出过高滑点/冲击成本。
+max_taker_rescue_quote_usdt = 100.0
+
+# taker rescue 相对 reference_price 可接受的最大滑点，单位 bps。
+max_slippage_bps = 50.0
+
+# 允许暴露在单腿恢复/救援阶段继续处理的最大未对冲名义金额。
+# 超过该值时系统更倾向于阻断并要求人工介入，而不是继续自动追单。
+max_unhedged_quote_usdt = 100.0
+
+# 每次轮询订单状态的间隔，单位秒。
+# 值越小，撤单和重挂越快；值越大，请求更温和但响应更慢。
+poll_interval_sec = 0.25
+
+# 目标达成容忍度的数量步长倍数。
+# 与 `target_tolerance_quote_usdt` 共同决定“还差多少算已经到位”。
+target_tolerance_steps = 1
+
+# 目标达成容忍度的名义金额阈值，单位 USDT。
+# 实际容忍度取“quote 推导值”和“step 推导值”中的更合理结果。
+target_tolerance_quote_usdt = 0.5
+
+# pair journal 持久化目录。
+# live run / close run / status / resume 都依赖这里的 journal 恢复现场。
+pair_journal_dir = "var/pair_journal"
+
+# 单次 cancel_order 最多重试次数。
+# 注意：这不是“重挂次数”，而是一次撤单动作内部的 HTTP/API 重试预算。
+cancel_retry_count = 3
+
+# 提交后若订单状态不明，回查 open orders / order detail 的最大重试次数。
+order_lookup_retry_count = 3
+
+# 从“提交状态未知”切回状态恢复链路时，允许等待的时间窗口，单位秒。
+state_restore_timeout_sec = 3.0
+
+# 提交后若返回超时/网络错误，进入未知提交恢复前的等待窗口，单位秒。
+submit_unknown_recovery_sec = 2.0
+
+# spot 买入腿预留的不参与下单的 USDT 安全垫。
+# open pair 时会扣除这部分余额后再估算可买数量。
+spot_quote_reserve_usdt = 2.0
+
+# perp 保证金腿预留的不参与新开仓的 USDT 安全垫。
+perp_margin_reserve_usdt = 2.0
+
+# 资金容量估算时附加的手续费/保守缓冲，单位 bps。
+# 值越大，capacity check 越保守，更容易 reduced / blocked。
+fee_buffer_bps = 20.0
+
+# 下单后账户里仍需剩余的最小空闲 quote 余额，单位 USDT。
+# 与上面的 reserve 一起构成 capacity check 的安全余量。
+min_free_quote_after_order_usdt = 1.0
+
+# 发现外部未归属本 pair_id 的 open orders 时的策略。
+# 当前 `block` 表示直接阻断，不自动与外部单共存。
+external_open_order_policy = "block"
+
+# 在 external_open_order_policy 不是 block 的未来扩展模式下，是否允许自动撤销外部挂单。
+# 当前配置为 false，意味着绝不替你动外部挂单。
+allow_cancel_external_orders = false
+
+# overfill 后的纠偏策略。
+# `match_lagging` 表示优先补落后腿，而不是立即反向打掉已超额腿。
+overfill_policy = "match_lagging"
+
+# 允许自动纠偏的最大 overfill 名义金额。
+# 超过这个值，系统应更谨慎，避免自动修正带来更大风险。
+max_overfill_quote_usdt = 20.0
+
+# 当一条腿超额成交时，是否允许自动 reduce 掉超额腿的一部分仓位来重新对齐。
+allow_reduce_overfilled_leg = true

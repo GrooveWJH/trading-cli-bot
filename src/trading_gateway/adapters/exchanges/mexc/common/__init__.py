@@ -1,0 +1,1 @@
+"""MEXC shared adapter surface."""
