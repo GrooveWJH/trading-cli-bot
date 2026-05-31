@@ -1,10 +1,14 @@
 from __future__ import annotations
 
 import json
+import os
 import subprocess
 import sys
 import unittest
 from pathlib import Path
+from unittest.mock import patch
+
+import typer
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -84,6 +88,40 @@ class StandaloneCliTest(unittest.TestCase):
         self.assertIn("confirmation mismatch", combined_output)
         self.assertNotIn("IP whitelist", combined_output)
         self.assertNotIn("www.okx.com", combined_output)
+
+    def test_positions_reports_private_api_failure_instead_of_empty_positions(self) -> None:
+        from trading_gateway.interfaces.cli import wallet
+
+        snapshot = {
+            "exchange": "okx",
+            "status": "partial_error",
+            "warnings": ["okx perp PermissionDenied: IP whitelist"],
+            "perp": {
+                "positions": [],
+                "status": "okx perp PermissionDenied: IP whitelist",
+            },
+        }
+
+        with patch.object(wallet, "fetch_exchange_snapshot", return_value=snapshot):
+            with self.assertRaises(typer.BadParameter) as raised:
+                wallet.wallet_positions("okx")
+
+        self.assertIn("IP whitelist", str(raised.exception))
+
+    def test_orders_reports_redacted_exchange_failure_without_traceback(self) -> None:
+        from trading_gateway.interfaces.cli import wallet
+
+        error = RuntimeError("okx PermissionDenied: API key secret-api-key is not in IP whitelist")
+
+        with patch.dict(os.environ, {"OKX_API_KEY": "secret-api-key"}):
+            with patch.object(wallet, "_wallet_snapshot", side_effect=error):
+                with self.assertRaises(typer.BadParameter) as raised:
+                    wallet.wallet_orders("okx", "perp", "BTC/USDT")
+
+        text = str(raised.exception)
+        self.assertIn("IP whitelist", text)
+        self.assertIn("<redacted>", text)
+        self.assertNotIn("secret-api-key", text)
 
 
 if __name__ == "__main__":

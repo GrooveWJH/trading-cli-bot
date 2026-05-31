@@ -12,6 +12,7 @@ from trading_gateway.interfaces.daemon.client import DaemonClientError, daemon_h
 from trading_gateway.infrastructure.exchange.factory import build_ccxt_client, close_client
 from trading_gateway.domain.models import TransferIntent, normalize_market, public_market_choices
 from trading_gateway.support.formatting import print_json
+from trading_gateway.support.redaction import redact_text
 from trading_gateway.application.wallet.wallet import fetch_wallet_snapshot, run_transfer
 from trading_gateway.application.wallet.summary_runner import print_wallet_summary
 
@@ -100,6 +101,7 @@ def wallet_balance(
 def wallet_positions(exchange: ExchangeOpt, symbol: Annotated[str | None, typer.Option()] = None) -> None:
     validate_exchange(exchange)
     snapshot = fetch_exchange_snapshot(exchange, nonzero_only=True, include_empty_positions=True, markets=("perp",))
+    _raise_snapshot_account_error(snapshot, "perp")
     rows = (snapshot.get("perp") or {}).get("positions") or []
     if symbol:
         rows = [row for row in rows if _matches_position_symbol(row, symbol)]
@@ -109,7 +111,10 @@ def wallet_positions(exchange: ExchangeOpt, symbol: Annotated[str | None, typer.
 def wallet_orders(exchange: ExchangeOpt, market: MarketOpt, symbol: Annotated[str, typer.Option()]) -> None:
     validate_exchange(exchange)
     validate_market(market)
-    print_json({"open_orders": _wallet_snapshot(exchange, market, symbol).open_orders})
+    try:
+        print_json({"open_orders": _wallet_snapshot(exchange, market, symbol).open_orders})
+    except Exception as exc:  # noqa: BLE001 - CLI boundary returns concise redacted exchange errors.
+        raise typer.BadParameter(redact_text(f"{type(exc).__name__}: {exc}")) from exc
 
 
 def wallet_transfer(
@@ -177,6 +182,16 @@ def _account_view(snapshot: dict[str, Any], market: str) -> dict[str, Any]:
     if not account.get("query_ms"):
         account["query_ms"] = snapshot.get("query_ms", 0)
     return account
+
+
+def _raise_snapshot_account_error(snapshot: dict[str, Any], market: str) -> None:
+    account = snapshot.get(market) or {}
+    status = str(account.get("status") or "")
+    if status and status != "empty" and not status.startswith("ok"):
+        raise typer.BadParameter(redact_text(status))
+    warnings = snapshot.get("warnings") or []
+    if warnings:
+        raise typer.BadParameter(redact_text("; ".join(str(item) for item in warnings)))
 
 
 def _matches_position_symbol(row: dict[str, Any], symbol: str) -> bool:
